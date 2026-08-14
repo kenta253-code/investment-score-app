@@ -119,20 +119,28 @@ else:
 
         total_score = score1 + score2 + score3 + score4 + score5
 
-        # 画面表示（プロっぽいメトリクスカード）
+      # 画面表示（プロっぽいメトリクスカード）
         col1, col2 = st.columns(2)
 
         with col1:
-      # ダーク調の強調カードデザイン
-          st.markdown(f"""
-          <div style="padding: 20px; background-color: #262730; border-left: 10px solid #1f77b4; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); color: #ffffff;">
-            <div style="font-size: 0.9em; color: #b0b0b0; margin-bottom: 5px;">現在の投資環境総合スコア (-10 〜 +10)</div>
-            <div style="font-size: 3.0em; font-weight: 800; color: #ffffff;">{total_score} 点</div>
-          </div>
-          """, unsafe_allow_html=True)
-          
+          st.metric(
+              label="現在の投資環境総合スコア (-10 〜 +10)",
+              value=f"{total_score} 点",
+          )
+
+        # 季節判定とアドバイスの決定
+        season_key = "spring"
+        if total_score <= -6:
+          season_key = "winter"
+        elif dgs10_diff < 0 and spread_level < 0.5:
+          season_key = "late_autumn"
+        elif total_score <= 0:
+          season_key = "autumn"
+        else:
+          season_key = "summer"  # 基本は春か夏
+
         with col2:
-       titles = {
+          titles = {
               "spring": "🌸 【春】 景気回復局面",
               "summer": "☀️ 【夏】 景気過熱・利上げ局面",
               "autumn": "🍂 【秋】 景気減速局面",
@@ -140,14 +148,6 @@ else:
               "winter": "❄️ 【冬】 景気後退局面 (危険水域)",
           }
           st.metric(label="現在の景気サイクル判定", value=titles[season_key])
-          
-          # st.metricの代わりにHTMLを使ったカスタム表示に書き換えます
-          st.markdown(f"""
-          <div style="padding: 10px; background-color: #f0f2f6; border-radius: 5px;">
-            <div style="font-size: 0.8em; color: #555; margin-bottom: 5px;">現在の景気サイクル判定</div>
-            <div style="font-size: 1.0em; font-weight: bold; color: #333;">{titles[season_key]}</div>
-          </div>
-          """, unsafe_allow_html=True)
           
         # 季節ごとのアドバイス表示枠
         st.markdown("---")
