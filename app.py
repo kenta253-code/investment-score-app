@@ -139,6 +139,7 @@ else:
               "late_autumn": "🍁 【晩秋】 冬の一歩手前",
               "winter": "❄️ 【冬】 景気後退局面 (危険水域)",
           }
+          st.metric(label="現在の景気サイクル判定", value=titles[season_key])
           
           # st.metricの代わりにHTMLを使ったカスタム表示に書き換えます
           st.markdown(f"""
