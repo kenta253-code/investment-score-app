@@ -123,33 +123,28 @@ else:
         col1, col2 = st.columns(2)
 
         with col1:
-        # st.metricの代わりに、強調デザインのHTMLを表示します
+      # ダーク調の強調カードデザイン
           st.markdown(f"""
-          <div style="padding: 20px; background-color: #f0f8ff; border-left: 10px solid #1f77b4; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
-            <div style="font-size: 0.9em; color: #555; margin-bottom: 5px;">現在の投資環境総合スコア (-10 〜 +10)</div>
-            <div style="font-size: 3.0em; font-weight: 800; color: #1f77b4;">{total_score} 点</div>
+          <div style="padding: 20px; background-color: #262730; border-left: 10px solid #1f77b4; border-radius: 10px; box-shadow: 2px 2px 10px rgba(0,0,0,0.5); color: #ffffff;">
+            <div style="font-size: 0.9em; color: #b0b0b0; margin-bottom: 5px;">現在の投資環境総合スコア (-10 〜 +10)</div>
+            <div style="font-size: 3.0em; font-weight: 800; color: #ffffff;">{total_score} 点</div>
           </div>
-          """, unsafe_allow_html=True) 
-
-        # 季節判定とアドバイスの決定
-        season_key = "spring"
-        if total_score <= -6:
-          season_key = "winter"
-        elif dgs10_diff < 0 and spread_level < 0.5:
-          season_key = "late_autumn"
-        elif total_score <= 0:
-          season_key = "autumn"
-        else:
-          season_key = "summer"  # 基本は春か夏
-
+          """, unsafe_allow_html=True)
         with col2:
-          titles = {
-              "spring": "🌸 【春】 景気底打ち、株価・金利の上昇",
-              "summer": "☀️ 【夏】 景気過熱、利上げ開始",
-              "autumn": "🍂 【秋】 景気減速、金利の低下開始",
-              "late_autumn": "🍁 【晩秋】景気後退局面の一歩手前",
-              "winter": "❄️ 【冬】 景気後退、利下げと株価急落(危険水域)",
+         titles = {
+              "spring": "🌸 【春】 景気回復局面",
+              "summer": "☀️ 【夏】 景気過熱・利上げ局面",
+              "autumn": "🍂 【秋】 景気減速局面",
+              "late_autumn": "🍁 【晩秋】 冬の一歩手前",
+              "winter": "❄️ 【冬】 景気後退局面 (危険水域)",
           }
+          # ダーク調の判定カードデザイン
+          st.markdown(f"""
+          <div style="padding: 15px; background-color: #262730; border-radius: 10px; border: 1px solid #404040; color: #ffffff;">
+            <div style="font-size: 0.8em; color: #b0b0b0; margin-bottom: 5px;">現在の景気サイクル判定</div>
+            <div style="font-size: 1.2em; font-weight: bold; color: #ffffff;">{titles[season_key]}</div>
+          </div>
+          """, unsafe_allow_html=True)
          
           st.metric(label="現在の景気サイクル判定", value=titles[season_key])
 
