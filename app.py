@@ -123,10 +123,13 @@ else:
         col1, col2 = st.columns(2)
 
         with col1:
-          st.metric(
-              label="現在の投資環境総合スコア (-10 〜 +10)",
-              value=f"{total_score} 点",
-          )
+        # st.metricの代わりに、強調デザインのHTMLを表示します
+          st.markdown(f"""
+          <div style="padding: 20px; background-color: #f0f8ff; border-left: 10px solid #1f77b4; border-radius: 10px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+            <div style="font-size: 0.9em; color: #555; margin-bottom: 5px;">現在の投資環境総合スコア (-10 〜 +10)</div>
+            <div style="font-size: 3.0em; font-weight: 800; color: #1f77b4;">{total_score} 点</div>
+          </div>
+          """, unsafe_allow_html=True) 
 
         # 季節判定とアドバイスの決定
         season_key = "spring"
