@@ -141,20 +141,12 @@ else:
 
         with col2:
           titles = {
-              "spring": "🌸 【春】 景気底打ち、株価・長期金利の上昇",
-              "summer": "☀️ 【夏】 景気過熱、中央銀行による利上げ開始",
-              "autumn": "🍂 【秋】 景気減速、長期金利の低下開始",
+              "spring": "🌸 【春】 景気底打ち、株価・金利の上昇",
+              "summer": "☀️ 【夏】 景気過熱、利上げ開始",
+              "autumn": "🍂 【秋】 景気減速、金利の低下開始",
               "late_autumn": "🍁 【晩秋】景気後退局面の一歩手前",
-              "winter": "❄️ 【冬】  景気後退、利下げと株価急落(危険水域)",
+              "winter": "❄️ 【冬】 景気後退、利下げと株価急落(危険水域)",
           }
-# st.metricの代わりにHTMLを使ったカスタム表示に書き換えます
-          st.markdown(f"""
-          <div style="padding: 10px; background-color: #f0f2f6; border-radius: 5px;">
-            <div style="font-size: 0.8em; color: #555; margin-bottom: 5px;">現在の景気サイクル判定</div>
-            <div style="font-size: 1.0em; font-weight: bold; color: #333;">{titles[season_key]}</div>
-          </div>
-          """, unsafe_allow_html=True)
-
          
           st.metric(label="現在の景気サイクル判定", value=titles[season_key])
 
