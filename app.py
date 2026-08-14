@@ -147,6 +147,15 @@ else:
               "late_autumn": "🍁 【晩秋】景気後退局面の一歩手前",
               "winter": "❄️ 【冬】  景気後退、利下げと株価急落(危険水域)",
           }
+# st.metricの代わりにHTMLを使ったカスタム表示に書き換えます
+          st.markdown(f"""
+          <div style="padding: 10px; background-color: #f0f2f6; border-radius: 5px;">
+            <div style="font-size: 0.8em; color: #555; margin-bottom: 5px;">現在の景気サイクル判定</div>
+            <div style="font-size: 1.0em; font-weight: bold; color: #333;">{titles[season_key]}</div>
+          </div>
+          """, unsafe_allow_html=True)
+
+         
           st.metric(label="現在の景気サイクル判定", value=titles[season_key])
 
         # 季節ごとのアドバイス表示枠
