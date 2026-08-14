@@ -130,6 +130,7 @@ else:
             <div style="font-size: 3.0em; font-weight: 800; color: #ffffff;">{total_score} 点</div>
           </div>
           """, unsafe_allow_html=True)
+          
         with col2:
        titles = {
               "spring": "🌸 【春】 景気回復局面",
