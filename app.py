@@ -131,23 +131,22 @@ else:
           </div>
           """, unsafe_allow_html=True)
         with col2:
-         titles = {
+       titles = {
               "spring": "🌸 【春】 景気回復局面",
               "summer": "☀️ 【夏】 景気過熱・利上げ局面",
               "autumn": "🍂 【秋】 景気減速局面",
               "late_autumn": "🍁 【晩秋】 冬の一歩手前",
               "winter": "❄️ 【冬】 景気後退局面 (危険水域)",
           }
-          # ダーク調の判定カードデザイン
+          
+          # st.metricの代わりにHTMLを使ったカスタム表示に書き換えます
           st.markdown(f"""
-          <div style="padding: 15px; background-color: #262730; border-radius: 10px; border: 1px solid #404040; color: #ffffff;">
-            <div style="font-size: 0.8em; color: #b0b0b0; margin-bottom: 5px;">現在の景気サイクル判定</div>
-            <div style="font-size: 1.2em; font-weight: bold; color: #ffffff;">{titles[season_key]}</div>
+          <div style="padding: 10px; background-color: #f0f2f6; border-radius: 5px;">
+            <div style="font-size: 0.8em; color: #555; margin-bottom: 5px;">現在の景気サイクル判定</div>
+            <div style="font-size: 1.0em; font-weight: bold; color: #333;">{titles[season_key]}</div>
           </div>
           """, unsafe_allow_html=True)
-         
-          st.metric(label="現在の景気サイクル判定", value=titles[season_key])
-
+          
         # 季節ごとのアドバイス表示枠
         st.markdown("---")
         st.subheader("💡 現在の季節における投資判断アドバイス")
