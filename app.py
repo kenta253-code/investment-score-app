@@ -248,7 +248,7 @@ else:
         ]
         st.dataframe(pd.DataFrame(df_data), use_container_width=True)
 
-st.markdown("---")
+        st.markdown("---")
         with st.expander("📖 景気局面（四季）の全体像と解説（本書のまとめ）"):
             st.markdown("""
             本書『金利を見れば投資はうまくいく』における、景気サイクルの基本的な考え方です。
