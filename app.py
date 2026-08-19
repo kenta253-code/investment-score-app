@@ -28,10 +28,11 @@ def save_key(key):
 
 
 st.title(
-    "📈 投資環境スコア判定アプリ（A格・HY債統合版)"
-    )
+    "📈 金利を見れば投資はうまくいく -"
+    " 投資環境スコア自動計算アプリ（個別詳細分離版）"
+)
 st.write(
-    "米国マクロ経済データの投資環境スコアを自動計算します（A格版およびハイイールド版比較）。"
+    "本書（第9章）に基づく米国マクロ経済データの投資環境スコアを自動計算します（A格版とハイイールド版を個別に表示）。"
 )
 
 # サイドバーにAPIキー入力欄（保存機能付き）
@@ -126,7 +127,6 @@ else:
         score4_hy = 2 if hy_diff <= 0 else -2
         total_score_hy = score1 + score2 + score3 + score4_hy + score5
 
-        # 季節判定の定義
         titles = {
             "spring": "🌸 【春】 景気回復局面",
             "summer": "☀️ 【夏】 景気過熱・利上げ局面",
@@ -155,23 +155,25 @@ else:
         else:
           season_hy = "summer" if total_score_hy > 4 else "spring"
 
-        # ━━━ 画面上部：2つのスコアを左右に並べて表示 ━━━
-        col_baa, col_hy = st.columns(2)
+        # ━━━ セクション1：A格（Baa）スプレッド版 ━━━
+        st.markdown("---")
+        st.header("📌 A格（Baa）スプレッド版 ダッシュボード")
 
-        with col_baa:
-          st.markdown("### 📌 A格（Baa）スプレッド版")
+        col1, col2 = st.columns(2)
+        with col1:
           st.markdown(
               f"""
-                    <div style="padding: 15px; background-color: #262730; border-left: 8px solid #1f77b4; border-radius: 8px; color: #ffffff; margin-bottom: 10px;">
+                    <div style="padding: 15px; background-color: #262730; border-left: 8px solid #1f77b4; border-radius: 8px; color: #ffffff;">
                         <div style="font-size: 0.8em; color: #b0b0b0;">総合スコア (-10 〜 +10)</div>
                         <div style="font-size: 2.5em; font-weight: 800; color: #ffffff;">{total_score_baa} 点</div>
                     </div>
                     """,
               unsafe_allow_html=True,
           )
+        with col2:
           st.markdown(
               f"""
-                    <div style="padding: 12px; background-color: #262730; border-radius: 8px; border: 1px solid #404040; color: #ffffff;">
+                    <div style="padding: 15px; background-color: #262730; border-radius: 8px; border: 1px solid #404040; color: #ffffff;">
                         <div style="font-size: 0.75em; color: #b0b0b0;">景気サイクル判定</div>
                         <div style="font-size: 1.1em; font-weight: bold; color: #ffffff;">{titles[season_baa]}</div>
                     </div>
@@ -179,123 +181,8 @@ else:
               unsafe_allow_html=True,
           )
 
-        with col_hy:
-          st.markdown("### 📌 ハイイールドスプレッド版")
-          st.markdown(
-              f"""
-                    <div style="padding: 15px; background-color: #262730; border-left: 8px solid #ff7f0e; border-radius: 8px; color: #ffffff; margin-bottom: 10px;">
-                        <div style="font-size: 0.8em; color: #b0b0b0;">総合スコア (-10 〜 +10)</div>
-                        <div style="font-size: 2.5em; font-weight: 800; color: #ffffff;">{total_score_hy} 点</div>
-                    </div>
-                    """,
-              unsafe_allow_html=True,
-          )
-          st.markdown(
-              f"""
-                    <div style="padding: 12px; background-color: #262730; border-radius: 8px; border: 1px solid #404040; color: #ffffff;">
-                        <div style="font-size: 0.75em; color: #b0b0b0;">景気サイクル判定</div>
-                        <div style="font-size: 1.1em; font-weight: bold; color: #ffffff;">{titles[season_hy]}</div>
-                    </div>
-                    """,
-              unsafe_allow_html=True,
-          )
-
-        st.markdown("---")
-
-        # ━━━ 5つの項目の詳細内訳（1つのテーブルに完全に統合） ━━━
-        st.subheader("📊 5つの項目の詳細内訳（統合一覧）")
-        df_data_combined = [
+        st.subheader("📊 A格版：5つの項目の詳細内訳")
+        df_baa_items = [
             {
                 "項目": "1. 政策金利",
-                "指標": "FF金利 (%)",
-                "直近値": fed["latest"],
-                "1年前": fed["ago"],
-                "変化": f"{fed_diff:+.2f}",
-                "個別スコア": score1,
-                "判定の理由": "利上げ局面は抑制" if score1 == -2 else "緩和・安定",
-            },
-            {
-                "項目": "2. 長短金利差",
-                "指標": "10年債 - 政策金利 (%)",
-                "直近値": spread_level,
-                "1年前": "-",
-                "変化": "-",
-                "個別スコア": score2,
-                "判定の理由": (
-                    "逆イールド警戒"
-                    if score2 == -2
-                    else ("正常サイクル" if score2 == 2 else "中立")
-                ),
-            },
-            {
-                "項目": "3. 長期金利",
-                "指標": "10年国債利回り (%)",
-                "直近値": dgs10["latest"],
-                "1年前": dgs10["ago"],
-                "変化": f"{dgs10_diff:+.2f}",
-                "個別スコア": score3,
-                "判定の理由": (
-                    "成長織り込み上昇" if score3 == 2 else "減速先取り低下"
-                ),
-            },
-            {
-                "項目": "4A. 社債スプレッド (A格/Baa)",
-                "指標": "Baa社債 - 10年債 (%)",
-                "直近値": baa10y["latest"],
-                "1年前": baa10y["ago"],
-                "変化": f"{baa_diff:+.2f}",
-                "個別スコア": score4_baa,
-                "判定の理由": "健全" if score4_baa == 2 else "信用リスク上昇・警戒",
-            },
-            {
-                "項目": "4B. ハイイールドスプレッド",
-                "指標": "ICE BofA US HY OAS (%)",
-                "直近値": hy_spread["latest"],
-                "1年前": hy_spread["ago"],
-                "変化": f"{hy_diff:+.2f}",
-                "個別スコア": score4_hy,
-                "判定の理由": "健全" if score4_hy == 2 else "リスク拡大・警戒信号",
-            },
-            {
-                "項目": "5. 米ドル指数",
-                "指標": "名目実効為替レート",
-                "直近値": twexb["latest"],
-                "1年前": twexb["ago"],
-                "変化": f"{usd_ratio:.2f}倍",
-                "個別スコア": score5,
-                "判定の理由": "グローバル寛容" if score5 == 2 else "引き締め圧力",
-            },
-        ]
-        st.dataframe(pd.DataFrame(df_data_combined), use_container_width=True)
-
-        st.markdown("---")
-        with st.expander("📖 景気局面（四季）の全体像と解説（本書のまとめ）"):
-          st.markdown(
-              "本書『金利を見れば投資はうまくいく』における、景気サイクルの基本的な考え方です。"
-          )
-          st.table(
-              pd.DataFrame({
-                  "季節": ["春", "夏", "秋", "晩秋", "冬"],
-                  "景況感": ["回復", "過熱", "減速", "冬支度", "後退"],
-                  "金利データの特徴": [
-                      "金利横ばい",
-                      "利上げ開始",
-                      "長期金利低下",
-                      "長短金利差急縮小",
-                      "利下げ開始",
-                  ],
-                  "投資の心構え": [
-                      "株式仕込み時",
-                      "上昇を享受",
-                      "資産配分見直し",
-                      "現金化・防御",
-                      "仕込みの準備",
-                  ],
-              })
-          )
-          st.markdown(
-              "**投資の心得（本書より）**\n1."
-              " **金利は“売買”ではなく“使う”**：現状を客観的に捉えるために使いましょう。\n2."
-              " **全ては循環する**："
-              "軸をぶらさず、サイクルの法則に従って冷静に行動することが、大失敗を防ぐ唯一の道です。"
-          )
+                "指標": "FF金利 (%)
