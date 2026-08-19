@@ -185,4 +185,166 @@ else:
         df_baa_items = [
             {
                 "項目": "1. 政策金利",
-                "指標": "FF金利 (%)
+                "指標": "FF金利 (%)",
+                "直近値": fed["latest"],
+                "1年前": fed["ago"],
+                "変化": f"{fed_diff:+.2f}",
+                "個別スコア": score1,
+                "判定の理由": "利上げ局面は抑制" if score1 == -2 else "緩和・安定",
+            },
+            {
+                "項目": "2. 長短金利差",
+                "指標": "10年債 - 政策金利 (%)",
+                "直近値": spread_level,
+                "1年前": "-",
+                "変化": "-",
+                "個別スコア": score2,
+                "判定の理由": (
+                    "逆イールド警戒"
+                    if score2 == -2
+                    else ("正常サイクル" if score2 == 2 else "中立")
+                ),
+            },
+            {
+                "項目": "3. 長期金利",
+                "指標": "10年国債利回り (%)",
+                "直近値": dgs10["latest"],
+                "1年前": dgs10["ago"],
+                "変化": f"{dgs10_diff:+.2f}",
+                "個別スコア": score3,
+                "判定の理由": (
+                    "成長織り込み上昇" if score3 == 2 else "減速先取り低下"
+                ),
+            },
+            {
+                "項目": "4. 社債スプレッド (A格/Baa)",
+                "指標": "Baa社債 - 10年債 (%)",
+                "直近値": baa10y["latest"],
+                "1年前": baa10y["ago"],
+                "変化": f"{baa_diff:+.2f}",
+                "個別スコア": score4_baa,
+                "判定の理由": (
+                    "健全" if score4_baa == 2 else "信用リスク上昇・警戒"
+                ),
+            },
+            {
+                "項目": "5. 米ドル指数",
+                "指標": "名目実効為替レート",
+                "直近値": twexb["latest"],
+                "1年前": twexb["ago"],
+                "変化": f"{usd_ratio:.2f}倍",
+                "個別スコア": score5,
+                "判定の理由": "グローバル寛容" if score5 == 2 else "引き締め圧力",
+            },
+        ]
+        st.dataframe(pd.DataFrame(df_baa_items), use_container_width=True)
+
+        # ━━━ セクション2：ハイイールドスプレッド版 ━━━
+        st.markdown("---")
+        st.header("📌 ハイイールドスプレッド版 ダッシュボード")
+
+        col3, col4 = st.columns(2)
+        with col3:
+          st.markdown(
+              f"""
+                    <div style="padding: 15px; background-color: #262730; border-left: 8px solid #ff7f0e; border-radius: 8px; color: #ffffff;">
+                        <div style="font-size: 0.8em; color: #b0b0b0;">総合スコア (-10 〜 +10)</div>
+                        <div style="font-size: 2.5em; font-weight: 800; color: #ffffff;">{total_score_hy} 点</div>
+                    </div>
+                    """,
+              unsafe_allow_html=True,
+          )
+        with col4:
+          st.markdown(
+              f"""
+                    <div style="padding: 15px; background-color: #262730; border-radius: 8px; border: 1px solid #404040; color: #ffffff;">
+                        <div style="font-size: 0.75em; color: #b0b0b0;">景気サイクル判定</div>
+                        <div style="font-size: 1.1em; font-weight: bold; color: #ffffff;">{titles[season_hy]}</div>
+                    </div>
+                    """,
+              unsafe_allow_html=True,
+          )
+
+        st.subheader("📊 ハイイールド版：5つの項目の詳細内訳")
+        df_hy_items = [
+            {
+                "項目": "1. 政策金利",
+                "指標": "FF金利 (%)",
+                "直近値": fed["latest"],
+                "1年前": fed["ago"],
+                "変化": f"{fed_diff:+.2f}",
+                "個別スコア": score1,
+                "判定の理由": "利上げ局面は抑制" if score1 == -2 else "緩和・安定",
+            },
+            {
+                "項目": "2. 長短金利差",
+                "指標": "10年債 - 政策金利 (%)",
+                "直近値": spread_level,
+                "1年前": "-",
+                "変化": "-",
+                "個別スコア": score2,
+                "判定の理由": (
+                    "逆イールド警戒"
+                    if score2 == -2
+                    else ("正常サイクル" if score2 == 2 else "中立")
+                ),
+            },
+            {
+                "項目": "3. 長期金利",
+                "指標": "10年国債利回り (%)",
+                "直近値": dgs10["latest"],
+                "1年前": dgs10["ago"],
+                "変化": f"{dgs10_diff:+.2f}",
+                "個別スコア": score3,
+                "判定の理由": (
+                    "成長織り込み上昇" if score3 == 2 else "減速先取り低下"
+                ),
+            },
+            {
+                "項目": "4. 社債スプレッド (ハイイールド)",
+                "指標": "ICE BofA US HY OAS (%)",
+                "直近値": hy_spread["latest"],
+                "1年前": hy_spread["ago"],
+                "変化": f"{hy_diff:+.2f}",
+                "個別スコア": score4_hy,
+                "判定の理由": (
+                    "健全" if score4_hy == 2 else "リスク拡大・警戒信号"
+                ),
+            },
+            {
+                "項目": "5. 米ドル指数",
+                "指標": "名目実効為替レート",
+                "直近値": twexb["latest"],
+                "1年前": twexb["ago"],
+                "変化": f"{usd_ratio:.2f}倍",
+                "個別スコア": score5,
+                "判定の理由": "グローバル寛容" if score5 == 2 else "引き締め圧力",
+            },
+        ]
+        st.dataframe(pd.DataFrame(df_hy_items), use_container_width=True)
+
+        st.markdown("---")
+        with st.expander("📖 景気局面（四季）の全体像と解説（本書のまとめ）"):
+          st.markdown(
+              "本書『金利を見れば投資はうまくいく』における、景気サイクルの基本的な考え方です。"
+          )
+          st.table(
+              pd.DataFrame({
+                  "季節": ["春", "夏", "秋", "晩秋", "冬"],
+                  "景況感": ["回復", "過熱", "減速", "冬支度", "後退"],
+                  "金利データの特徴": [
+                      "金利横ばい",
+                      "利上げ開始",
+                      "長期金利低下",
+                      "長短金利差急縮小",
+                      "利下げ開始",
+                  ],
+                  "投資の心構え": [
+                      "株式仕込み時",
+                      "上昇を享受",
+                      "資産配分見直し",
+                      "現金化・防御",
+                      "仕込みの準備",
+                  ],
+              })
+          )
